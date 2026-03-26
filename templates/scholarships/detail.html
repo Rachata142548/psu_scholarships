@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ scholarship.title }} | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<div class="detail-page">
+    <div class="detail-container">
+        <a href="javascript:history.back()" class="btn-back">← กลับ</a>
+
+        <div class="detail-card">
+            <div class="detail-header">
+                <span class="scholarship-status {{ scholarship.status }}">{{ scholarship.get_status_display }}</span>
+                <h1>{{ scholarship.title }}</h1>
+            </div>
+
+            <div class="detail-info-grid">
+                <div class="detail-info-item">
+                    <span class="detail-label">💰 จำนวนทุน</span>
+                    <span class="detail-value">{{ scholarship.amount_per_semester }} บาท/ภาคการศึกษา</span>
+                </div>
+                <div class="detail-info-item">
+                    <span class="detail-label">👥 จำนวนที่รับ</span>
+                    <span class="detail-value">{{ scholarship.capacity }} คน</span>
+                </div>
+                <div class="detail-info-item">
+                    <span class="detail-label">📅 เปิดรับ</span>
+                    <span class="detail-value">{{ scholarship.start_date }}</span>
+                </div>
+                <div class="detail-info-item">
+                    <span class="detail-label">📅 ปิดรับ</span>
+                    <span class="detail-value">{{ scholarship.end_date }}</span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>รายละเอียด</h2>
+                <p>{{ scholarship.description }}</p>
+            </div>
+
+            <div class="detail-section">
+                <h2>คุณสมบัติผู้สมัคร</h2>
+                <p>{{ scholarship.requirements }}</p>
+            </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+
+            {% if scholarship.status == 'active' %}
+    {% if user.is_authenticated %}
+        {% if already_applied %}
+            <div class="alert alert-success">✅ คุณได้สมัครทุนนี้แล้ว รอผลการพิจารณา</div>
+        {% else %}
+            <div class="detail-btn-row">
+                <a href="javascript:history.back()" class="btn-back-form">ย้อนกลับ</a>
+                <a href="{% url 'apply_form' scholarship.pk %}" class="btn-submit-apply">สมัครทันที</a>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            <a href="#" onclick="openLoginModal()">เข้าสู่ระบบ</a> เพื่อสมัครทุนนี้
+        </div>
+        <div class="detail-btn-row">
+            <a href="javascript:history.back()" class="btn-back-form">ย้อนกลับ</a>
+        </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-error">🔒 ทุนนี้ปิดรับสมัครแล้ว</div>
+    <div class="detail-btn-row">
+        <a href="javascript:history.back()" class="btn-back-form">ย้อนกลับ</a>
+    </div>
+{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

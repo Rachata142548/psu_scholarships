@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ส่งใบสมัครสำเร็จ | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<div class="success-page">
+    <div class="success-card">
+        <div class="success-icon">✅</div>
+        <h1>ส่งใบสมัครเรียบร้อยแล้ว!</h1>
+        <p class="success-sub">ขอบคุณที่สมัคร{{ scholarship.title }}</p>
+
+        {% if application %}
+        <div class="success-detail">
+            <h3>รายละเอียดการสมัครของคุณ:</h3>
+            <ul>
+                <li>ชื่อผู้สมัคร: <strong>{{ application.student.full_name }}</strong></li>
+                <li>รหัสนักศึกษา: <strong>{{ application.student.student_id }}</strong></li>
+                <li>ทุนที่สมัคร: <strong>{{ scholarship.title }} ({{ scholarship.get_category_display }})</strong></li>
+                <li>วันที่ส่ง: <strong>{{ application.submitted_at|date:"d F Y" }}</strong></li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <p class="success-note">กรุณาตรวจสอบอีเมลของคุณเพื่อติดตามผลการประกาศและการแจ้งเตือนอื่นๆ</p>
+
+        <a href="{% url 'home' %}" class="btn-submit">กลับสู่หน้าหลัก</a>
+    </div>
+</div>
+{% endblock %}

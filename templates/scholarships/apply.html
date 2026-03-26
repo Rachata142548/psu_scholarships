@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}สมัครทุน | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<div class="apply-page">
+    <div class="apply-container">
+        <a href="javascript:history.back()" class="btn-back">← ย้อนกลับ</a>
+
+        <h1 class="apply-main-title">แบบฟอร์มใบสมัคร</h1>
+        <p class="apply-scholarship-name">{{ scholarship.title }}</p>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="apply-form-main">
+            {% csrf_token %}
+            <div class="apply-two-col">
+
+                <!-- ซ้าย: ข้อมูลผู้สมัคร -->
+                <div class="apply-left">
+                    <h2 class="apply-section-title">ข้อมูลผู้สมัคร</h2>
+
+                    <div class="apply-field">
+                        <label>ชื่อ-นามสกุล:</label>
+                        <div class="apply-field-label">Full Name:</div>
+                        <input type="text" name="full_name"
+                            value="{{ student_profile.full_name|default:'' }}"
+                            placeholder="ชื่อ-นามสกุล" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label>รหัสนักศึกษา:</label>
+                        <input type="text" name="student_id"
+                            value="{{ student_profile.student_id|default:'' }}"
+                            placeholder="รหัสนักศึกษา" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label>คณะ/สาขา:</label>
+                        <input type="text" name="faculty_major"
+                            value="{% if student_profile %}{{ student_profile.get_faculty_display }} / {{ student_profile.major }}{% endif %}"
+                            placeholder="คณะ / สาขา" required>
+                    </div>
+
+                    <div class="apply-field">
+                        <label>เบอร์โทรศัพท์ติดต่อ:</label>
+                        <input type="text" name="phone"
+                            value="{{ student_profile.phone_number|default:'' }}"
+                            placeholder="เช่น 081-234-5678">
+                    </div>
+
+                    <div class="apply-checkbox">
+                        <input type="checkbox" id="confirmCheck" name="confirm" required>
+                        <label for="confirmCheck">
+                            ข้าพเจ้าขอรับรองว่าข้อมูลและเอกสารทั้งหมดเป็นความจริงและถูกต้อง
+                        </label>
+                    </div>
+                </div>
+
+                <!-- ขวา: อัพโหลดเอกสาร -->
+                <div class="apply-right">
+                    <h2 class="apply-section-title">อัปโหลดเอกสาร</h2>
+
+                    <div class="upload-grid">
+                        <!-- Transcript -->
+                        <div class="upload-box" id="transcriptBox"
+                             onclick="document.getElementById('transcriptInput').click()">
+                            <div class="upload-icon-area" id="transcriptIcon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.5" width="48" height="48">
+                                    <path d="M12 16V4m0 0L8 8m4-4l4 4"/>
+                                    <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>
+                                </svg>
+                                <p>ลากไฟล์มาวางที่นี่<br>หรือคลิกเพื่ออัปโหลด</p>
+                                <small>(ใบแสดงผลการเรียน)</small>
+                            </div>
+                            <div class="upload-success" id="transcriptSuccess" style="display:none">
+                                <span class="upload-check">✅</span>
+                                <p>ไฟล์ถูกอัปโหลดแล้ว</p>
+                                <small id="transcriptName"></small>
+                            </div>
+                        </div>
+                        <input type="file" id="transcriptInput" name="transcript"
+                               accept=".pdf,.jpg,.png" style="display:none"
+                               onchange="handleUpload(this,'transcript')">
+
+                        <!-- Recommendation -->
+                        <div class="upload-box" id="recommendBox"
+                             onclick="document.getElementById('recommendInput').click()">
+                            <div class="upload-icon-area" id="recommendIcon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.5" width="48" height="48">
+                                    <path d="M12 16V4m0 0L8 8m4-4l4 4"/>
+                                    <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>
+                                </svg>
+                                <p>ลากไฟล์มาวางที่นี่<br>หรือคลิกเพื่ออัปโหลด</p>
+                                <small>(จดหมายแนะนำจากอาจารย์ที่ปรึกษา)</small>
+                            </div>
+                            <div class="upload-success" id="recommendSuccess" style="display:none">
+                                <span class="upload-check">✅</span>
+                                <p>ไฟล์ถูกอัปโหลดแล้ว</p>
+                                <small id="recommendName"></small>
+                            </div>
+                        </div>
+                        <input type="file" id="recommendInput" name="recommendation"
+                               accept=".pdf,.jpg,.png" style="display:none"
+                               onchange="handleUpload(this,'recommend')">
+                    </div>
+
+                    <div class="upload-info">
+                        <p>รองรับไฟล์: PDF, JPG, PNG</p>
+                        <p>ขนาดไม่เกิน 12MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply-btn-row">
+                <a href="javascript:history.back()" class="btn-back-form">ย้อนกลับ</a>
+                <button type="submit" class="btn-submit-apply">ส่งใบสมัคร</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function handleUpload(input, key) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById(key + 'Icon').style.display = 'none';
+        document.getElementById(key + 'Success').style.display = 'flex';
+        document.getElementById(key + 'Name').textContent = file.name;
+        document.getElementById(key + 'Box').style.borderColor = '#16a34a';
+        document.getElementById(key + 'Box').style.background = '#f0fdf4';
+    }
+}
+</script>
+{% endblock %}

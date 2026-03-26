@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ค้นหาทุน | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<section class="category-section">
+    <div class="hero-bg">
+        <img src="{% static 'images/PsuPhuketBG.jpg' %}" alt="PSU Phuket" class="hero-image">
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="category-content">
+        <div class="category-grid">
+
+            <div class="category-card">
+                <div class="card-icon">📄</div>
+                <h3>ทุนการศึกษาทั่วไป</h3>
+                <a href="{% url 'scholarship_list' 'general' %}" class="btn-card">ค้นหาทุน</a>
+            </div>
+
+            <div class="category-card">
+                <div class="card-icon">💼</div>
+                <h3>ทุนการศึกษาแลกเปลี่ยน</h3>
+                <a href="{% url 'scholarship_list' 'exchange' %}" class="btn-card">ค้นหาทุน</a>
+            </div>
+
+            <div class="category-card">
+                <div class="card-icon">🎓</div>
+                <h3>ทุนยกเว้นค่าธรรมเนียมการศึกษา</h3>
+                <a href="{% url 'scholarship_list' 'fee_waiver' %}" class="btn-card">ค้นหาทุน</a>
+            </div>
+
+            <div class="category-card">
+                <div class="card-icon">🍱</div>
+                <h3>ทุนการศึกษาอาหารกลางวัน</h3>
+                <a href="{% url 'scholarship_list' 'lunch' %}" class="btn-card">ค้นหาทุน</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

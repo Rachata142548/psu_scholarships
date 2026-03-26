@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "หน้าแรก" %} | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-bg">
+        <img src="{% static 'images/PsuPhuketBG.jpg' %}" alt="PSU Phuket" class="hero-image">
+        <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+        <h1 class="hero-title">{% trans "ทุนการศึกษาที่ใช่ เพื่ออนาคตที่ไกลกว่า ณ ม.อ. ภูเก็ต" %}</h1>
+        <p class="hero-subtitle">{% trans "ศูนย์รวมข้อมูลทุนการศึกษาและสวัสดิการ สำหรับนักศึกษามอ. ทุกคณะ" %}</p>
+        <a href="{% url 'scholarships' %}" class="btn-hero">{% trans "ค้นหาทุนสำหรับนักศึกษา" %}</a>
+    </div>
+</section>
+{% endblock %}

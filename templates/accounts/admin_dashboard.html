@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}จัดการระบบ | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-container">
+        <h1 class="admin-title">🛠 แผงควบคุม Admin</h1>
+        <p class="admin-subtitle">ยินดีต้อนรับ, {{ user.username }}</p>
+
+        <!-- Stats -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-icon">🎓</div>
+                <div class="stat-num">{{ total_scholarships }}</div>
+                <div class="stat-label">ทุนทั้งหมด</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-num">{{ total_applications }}</div>
+                <div class="stat-label">ใบสมัครทั้งหมด</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-num">{{ pending_applications }}</div>
+                <div class="stat-label">รอพิจารณา</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-num">{{ approved_applications }}</div>
+                <div class="stat-label">อนุมัติแล้ว</div>
+            </div>
+        </div>
+
+        <!-- ใบสมัครล่าสุด -->
+        <div class="admin-section">
+            <h2 class="section-title">📋 รายการใบสมัครล่าสุด</h2>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ชื่อผู้สมัคร</th>
+                            <th>รหัส</th>
+                            <th>ทุนที่สมัคร</th>
+                            <th>วันที่สมัคร</th>
+                            <th>สถานะ</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td>{{ app.student.full_name }}</td>
+                            <td>{{ app.student.student_id }}</td>
+                            <td>{{ app.scholarship.title }}</td>
+                            <td>{{ app.submitted_at|date:"d M Y" }}</td>
+                            <td>
+                                <span class="app-status {{ app.status }}">
+                                    {% if app.status == 'pending' %}⏳ รอพิจารณา
+                                    {% elif app.status == 'approved' %}✅ อนุมัติ
+                                    {% else %}❌ ไม่อนุมัติ{% endif %}
+                                </span>
+                            </td>
+                            <td class="action-btns">
+                                <form method="post" action="{% url 'update_application' app.pk %}" style="display:inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn-approve">✅</button>
+                                </form>
+                                <form method="post" action="{% url 'update_application' app.pk %}" style="display:inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="btn-reject">❌</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" style="text-align:center;color:#9ca3af">ยังไม่มีใบสมัคร</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-grid" style="margin-top:32px">
+            <a href="/admin/" class="admin-card">
+                <div class="admin-card-icon">⚙️</div>
+                <h3>Django Admin Panel</h3>
+                <p>จัดการข้อมูลทั้งหมดในระบบ</p>
+            </a>
+            <a href="{% url 'scholarships' %}" class="admin-card">
+                <div class="admin-card-icon">🎓</div>
+                <h3>จัดการทุนการศึกษา</h3>
+                <p>ดูและจัดการทุนทั้งหมด</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

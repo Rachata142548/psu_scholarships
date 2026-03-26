@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category_title }} | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<div class="list-page">
+    <div class="list-container">
+        <a href="{% url 'scholarships' %}" class="btn-back">← กลับ</a>
+        <h1 class="list-title">{{ category_title }}</h1>
+
+        <!-- Search Box -->
+        <form method="GET" action="" style="margin-bottom:1.5rem;">
+            <div style="display:flex; gap:0.75rem; max-width:480px;">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ query }}"
+                    placeholder="ค้นหาชื่อทุน..."
+                    style="
+                        flex:1;
+                        padding:0.65rem 1rem;
+                        border:1.5px solid #d0d9e8;
+                        border-radius:10px;
+                        font-size:0.95rem;
+                        font-family:var(--font-thai);
+                        color:#2d3748;
+                        outline:none;
+                        background:white;
+                        transition:border-color 0.2s;
+                    "
+                    onfocus="this.style.borderColor='#1565c0'"
+                    onblur="this.style.borderColor='#d0d9e8'"
+                >
+                <button
+                    type="submit"
+                    style="
+                        padding:0.65rem 1.4rem;
+                        background:#1565c0;
+                        color:white;
+                        border:none;
+                        border-radius:10px;
+                        font-size:0.95rem;
+                        font-family:var(--font-thai);
+                        cursor:pointer;
+                        font-weight:600;
+                        transition:background 0.2s;
+                    "
+                    onmouseover="this.style.background='#0d47a1'"
+                    onmouseout="this.style.background='#1565c0'"
+                >🔍 ค้นหา</button>
+
+                {% if query %}
+                <a href="?"
+                    style="
+                        padding:0.65rem 1rem;
+                        color:#6b7c93;
+                        text-decoration:none;
+                        border:1.5px solid #d0d9e8;
+                        border-radius:10px;
+                        font-size:0.9rem;
+                        display:flex;
+                        align-items:center;
+                        background:white;
+                    "
+                >✕ ล้าง</a>
+                {% endif %}
+            </div>
+
+            {% if query %}
+            <p style="margin-top:0.6rem; font-size:0.85rem; color:#6b7c93;">
+                ผลการค้นหา "<strong style="color:#1565c0;">{{ query }}</strong>"
+                พบ {{ scholarships|length }} รายการ
+            </p>
+            {% endif %}
+        </form>
+
+        <!-- Empty Search Result -->
+        {% if query and not scholarships %}
+        <div style="
+            text-align:center;
+            padding:3rem;
+            color:#94a3b8;
+            background:white;
+            border-radius:16px;
+            border:1.5px dashed #d0d9e8;
+        ">
+            <div style="font-size:2.5rem; margin-bottom:0.75rem;">🔍</div>
+            <p style="font-size:1rem; font-weight:600; color:#64748b;">
+                ไม่พบทุนที่ชื่อ "{{ query }}"
+            </p>
+            <p style="font-size:0.85rem; margin-top:0.35rem;">
+                ลองค้นหาด้วยคำอื่น หรือ
+                <a href="?" style="color:#1565c0; font-weight:600;">ดูทุนทั้งหมด</a>
+            </p>
+        </div>
+
+        {% else %}
+        <!-- Scholarship Cards -->
+        <div class="scholarship-grid">
+            {% for s in scholarships %}
+            <div class="scholarship-card">
+                <div class="scholarship-card-header">
+                    <span class="scholarship-status {{ s.status }}">{{ s.get_status_display }}</span>
+                    <h3>{{ s.title }}</h3>
+                </div>
+                <div class="scholarship-card-body">
+                    <p>💰 <strong>{{ s.amount_per_semester }}</strong> บาท/ภาคการศึกษา</p>
+                    <p>👥 รับจำนวน: <strong>{{ s.capacity }}</strong> คน</p>
+                    <p>📅 ปิดรับ: <strong>{{ s.end_date }}</strong></p>
+                </div>
+                <a href="{% url 'scholarship_detail' s.pk %}" class="btn-card">ดูรายละเอียด</a>
+            </div>
+            {% empty %}
+            <p class="empty-text">ยังไม่มีทุนในประเภทนี้</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

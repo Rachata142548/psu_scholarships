@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}เข้าสู่ระบบ | PSU Phuket Scholarships{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <div class="hero-bg">
+        <img src="{% static 'images/PsuPhuketBG.jpg' %}" alt="PSU Phuket" class="hero-image">
+        <div class="hero-overlay"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <svg viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg" style="height:50px">
+                    <rect x="2" y="2" width="46" height="46" rx="6" fill="#1a4b8c"/>
+                    <text x="25" y="32" font-family="Arial Black" font-size="18" font-weight="900" fill="white" text-anchor="middle">PSU</text>
+                    <circle cx="54" cy="10" r="5" fill="#1cb5e8"/>
+                </svg>
+                <h2>PSU Phuket Scholarships</h2>
+            </div>
+
+            <h3 class="login-title">เข้าสู่ระบบ</h3>
+
+            {% if form.errors %}
+            <div class="login-error">
+                ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
+            </div>
+            {% endif %}
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div class="form-group">
+                    <label for="id_username">ชื่อผู้ใช้</label>
+                    <input type="text" name="username" id="id_username"
+                           placeholder="กรอกชื่อผู้ใช้" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password">รหัสผ่าน</label>
+                    <input type="password" name="password" id="id_password"
+                           placeholder="กรอกรหัสผ่าน" required>
+                </div>
+
+                <button type="submit" class="btn-submit">เข้าสู่ระบบ</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
